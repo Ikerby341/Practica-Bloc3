@@ -18,10 +18,10 @@ public class Electronica extends Productes{
 
     @Override
     public String toString() {
-        return "Electronica{" +
+        return "Electronica: " +
                 "nom: '" + nom + '\'' +
                 ", preu: " + preu +
-                ", codibarres: " + codibarres +
-                ", diesGarantia: " + diesGarantia;
+                ", codi de barres: " + codibarres +
+                ", dies de garantia: " + diesGarantia;
     }
 }

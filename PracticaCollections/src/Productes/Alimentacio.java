@@ -27,8 +27,8 @@ public class Alimentacio extends Productes{
         return "Alimentacio: " +
                 "nom: '" + nom + '\'' +
                 ", preu: " + preu +
-                ", codibarres: " + codibarres +
-                ", dataCaducitat: " + dataCaducitat;
+                ", codi de barres: " + codibarres +
+                ", data de caducitat: " + dataCaducitat;
     }
 }
 

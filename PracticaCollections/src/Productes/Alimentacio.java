@@ -2,8 +2,9 @@ package Productes;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 
-public class Alimentacio extends Productes{
+public class Alimentacio extends Productes implements Comparator<Alimentacio> {
     LocalDate dataCaducitat;
 
     public Alimentacio(String nom, Float preu, int codibarres, LocalDate dataCaducitat) {
@@ -20,6 +21,14 @@ public class Alimentacio extends Productes{
 
     public void setDataCaducitat(LocalDate dataCaducitat) {
         this.dataCaducitat = dataCaducitat;
+    }
+
+    public int compareTo(Alimentacio other) {
+        return this.dataCaducitat.compareTo(other.dataCaducitat);
+    }
+
+    public int compare(Alimentacio a1, Alimentacio a2) {
+        return a1.getDataCaducitat().compareTo(a2.getDataCaducitat());
     }
 
     @Override

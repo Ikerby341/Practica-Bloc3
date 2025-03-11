@@ -9,7 +9,7 @@ public class Main {
         Vista.msg("BENVINGUT AL SAPAMERCAT");
         while (cj) {
             Vista.titol("INICI");
-            Vista.msg("1) Introduir producte\n2) Passar per caixa\n3) Mostrar carret de compra\n0) Acabar");
+            Vista.msg("1) Introduir producte\n2) Passar per caixa\n3) Mostrar carret de compra\n4) Gestió Magatzem i Compres\n0) Acabar");
             int a = scan.nextInt();
             scan.nextLine(); // Consume el salto de línea pendiente
             switch (a) {
@@ -53,10 +53,36 @@ public class Main {
                     break;
                 case 2:
                     Vista.msg(Model.crearTiquet());
-                    cj = false;
+                    cont();
                     break;
                 case 3:
                     Vista.msg(Model.carretCompra());
+                    cont();
+                    break;
+                case 4:
+                    Vista.titol("MAGATZEM i COMPRES");
+                    Vista.msg("1) Caducitat\n2) Tiquets de compra\n3) Composiciò tèxtil\n0) Tornar");
+                    int f = scan.nextInt();
+                    scan.nextLine(); // Consume el salto de línea pendiente
+                    switch (f){
+                        case 0:
+                            break;
+                        case 1:
+                            Vista.msg(Model.mostrarProductesPerCaducitat());
+                            cont();
+                            break;
+                        case 2:
+                            Vista.msg(Model.numTiquets());
+                            if(scan.nextLine().equals("s")){
+                                Vista.msg(Model.mostrarTotsTiquets());
+                            }
+                            cont();
+                            break;
+                        case 3:
+                            Vista.msg(Model.mostrarTextilsPerComposicio());
+                            cont();
+                            break;
+                    }
                     break;
             }
         }
@@ -74,5 +100,11 @@ public class Main {
         dd.add(String.valueOf(scan.nextInt()));
         scan.nextLine(); // Consume el salto de línea pendiente
         return dd;
+    }
+
+    private static void cont(){
+        Scanner scan = new Scanner(System.in);
+        Vista.msg("Pulsa 'enter' per continuar");
+        scan.nextLine();
     }
 }

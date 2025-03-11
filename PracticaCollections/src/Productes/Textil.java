@@ -1,5 +1,7 @@
 package Productes;
 
+import java.util.Comparator;
+
 public class Textil extends Productes {
     String compText = "";
 
@@ -15,6 +17,17 @@ public class Textil extends Productes {
     public void setCompText(String compText) {
         this.compText = compText;
     }
+
+    public int compareTo(Textil other) {
+        return this.compText.compareTo(other.compText);
+    }
+
+    public static final Comparator<Textil> COMPARATOR = new Comparator<Textil>() {
+        @Override
+        public int compare(Textil t1, Textil t2) {
+            return t1.getCompText().compareTo(t2.getCompText());
+        }
+    };
 
     @Override
     public String toString() {

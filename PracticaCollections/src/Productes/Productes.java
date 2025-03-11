@@ -1,6 +1,6 @@
 package Productes;
 
-public class Productes {
+public class Productes implements Comparable<Productes> {
     String nom = "";
     Float preu = 0F;
     int codibarres = 0;
@@ -33,6 +33,11 @@ public class Productes {
 
     public void setCodibarres(int codibarres) {
         this.codibarres = codibarres;
+    }
+
+    @Override
+    public int compareTo(Productes other) {
+        return this.nom.compareTo(other.nom);
     }
 
     @Override

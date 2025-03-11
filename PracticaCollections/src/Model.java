@@ -12,7 +12,7 @@ public class Model {
     }
 
     protected static String crearTiquet() {
-        if(carret.isEmpty()) return "El carret de la compra esta buit!";
+        if (carret.isEmpty()) return "El carret de la compra està buit!";
         String barras = "------------------------------------";
         String finals = barras + "\nSAPAMERCAT\n" + barras + "\nData: " + LocalDate.now() + "\n" + barras;
         Float preufinal = 0F;
@@ -21,19 +21,31 @@ public class Model {
         Map<Integer, Integer> quantitats = getObjectQuantities(carret);
         Map<Integer, Productes> productesUnics = getUniqueProducts(carret);
 
-        // Crear una lista ordenada de productos únicos
-        List<Productes> sortedProducts = new ArrayList<>(productesUnics.values());
-        Collections.sort(sortedProducts);
+        // Crea un mapa para agrupar productos por código de barras y precio
+        Map<String, Integer> groupedProducts = new LinkedHashMap<>();
+        Map<String, String> productNames = new LinkedHashMap<>();
+        Map<String, Float> productPrices = new LinkedHashMap<>();
 
-        for (Productes p : sortedProducts) {
-            int quantitat = quantitats.get(p.getCodibarres());
-            finals += "\n" + p.getNom() + "     " + quantitat + " " + df.format(p.getPreu()) + " " + df.format(p.getPreu() * quantitat);
-            preufinal += p.getPreu() * quantitat;
+        for (Productes p : carret) {
+            String key = p.getCodibarres() + "-" + p.getPreu();
+            groupedProducts.put(key, groupedProducts.getOrDefault(key, 0) + 1);
+            productNames.put(key, p.getNom());
+            productPrices.put(key, p.getPreu());
+        }
+
+        for (Map.Entry<String, Integer> entry : groupedProducts.entrySet()) {
+            String[] parts = entry.getKey().split("-");
+            int codibarres = Integer.parseInt(parts[0]);
+            float preu = Float.parseFloat(parts[1]);
+            String nom = productNames.get(entry.getKey()); // Usar productNames para obtener el nombre
+            int quantitat = entry.getValue();
+            finals += "\n" + nom + "     " + quantitat + " " + df.format(preu) + " " + df.format(preu * quantitat);
+            preufinal += preu * quantitat;
         }
 
         finals += "\n" + barras + "\nTotal: " + df.format(preufinal) + " €";
         tiquets.add(finals);
-        while(!carret.isEmpty()) carret.remove();
+        while (!carret.isEmpty()) carret.remove();
         return finals;
     }
 
@@ -91,7 +103,7 @@ public class Model {
         StringBuilder resultado = new StringBuilder();
         DecimalFormat df = new DecimalFormat("#.00");
 
-        // Crear una lista de productos de alimentación
+        // Crea una lista de productos de alimentación
         List<Alimentacio> aliments = new ArrayList<>();
         for (Productes p : carret) {
             if (p instanceof Alimentacio) {
@@ -99,10 +111,10 @@ public class Model {
             }
         }
 
-        // Ordenar los productos de alimentación por fecha de caducidad
+        // Ordena los productos de alimentación por fecha de caducidad
         aliments.sort(Comparator.comparing(Alimentacio::getDataCaducitat));
 
-        // Añadir los productos ordenados al resultado
+        // Añade los productos ordenados al resultado
         for (Alimentacio a : aliments) {
             resultado.append(a.getNom()).append(" - ")
                     .append("Caducitat: ").append(a.getDataCaducitat()).append(" - ")
@@ -117,7 +129,7 @@ public class Model {
         StringBuilder resultado = new StringBuilder();
         DecimalFormat df = new DecimalFormat("#.00");
 
-        // Crear una lista de productos de tèxtil
+        // Crea una lista de productos de tèxtil
         List<Textil> textils = new ArrayList<>();
         Set<Integer> codisUnics = new HashSet<>();
 
@@ -130,10 +142,10 @@ public class Model {
             }
         }
 
-        // Ordenar los productos de tèxtil por composició tèxtil
+        // Ordena los productos de tèxtil por composició tèxtil
         textils.sort(Textil.COMPARATOR);
 
-        // Añadir los productos ordenados al resultado
+        // Añade los productos ordenados al resultado
         for (Textil t : textils) {
             resultado.append(t.getNom()).append(" - ")
                     .append("Composició Tèxtil: ").append(t.getCompText()).append(" - ")
@@ -141,5 +153,13 @@ public class Model {
         }
 
         return resultado.toString();
+    }
+
+    public static String buscarNomProductePerCodi(int codiBarres) {
+        Optional<Productes> producte = carret.stream()
+                .filter(p -> p.getCodibarres() == codiBarres)
+                .findFirst();
+        return producte.map(Productes::getNom)
+                .orElse("Producte no trobat");
     }
 }

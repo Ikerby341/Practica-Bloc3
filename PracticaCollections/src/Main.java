@@ -2,6 +2,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+
+import Excepcions.CustomExcepcions;
 import Productes.*;
 
 public class Main {
@@ -11,30 +13,35 @@ public class Main {
         Vista.msg("BENVINGUT AL SAPAMERCAT");
         try {
             while (cj) {
-                Vista.titol("INICI");
-                Vista.msg("1) Introduir producte\n2) Passar per caixa\n3) Mostrar carret de compra\n4) Gestió Magatzem i Compres\n0) Acabar");
-                int a = scan.nextInt();
-                if (a < 0 || a > 4) throw new InputMismatchException("El número introduit no es correcte (No existeixen accions amb aquest numero)");
-                scan.nextLine(); // Consume el salto de línea pendiente
-                switch (a) {
-                    case 0:
-                        cj = false;
-                        break;
-                    case 1:
-                        introduirProducte();
-                        break;
-                    case 2:
-                        Vista.msg(Model.crearTiquet());
-                        cont();
-                        break;
-                    case 3:
-                        Vista.msg(Model.carretCompra());
-                        cont();
-                        break;
-                    case 4:
-                        gestioMagatzemICompres();
-                        break;
+                try{
+                    Vista.titol("INICI");
+                    Vista.msg("1) Introduir producte\n2) Passar per caixa\n3) Mostrar carret de compra\n4) Gestió Magatzem i Compres\n0) Acabar");
+                    int a = scan.nextInt();
+                    if (a < 0 || a > 4) throw new InputMismatchException("El número introduit no es correcte (No existeixen accions amb aquest numero)");
+                    scan.nextLine(); // Consume el salto de línea pendiente
+                    switch (a) {
+                        case 0:
+                            cj = false;
+                            break;
+                        case 1:
+                            introduirProducte();
+                            break;
+                        case 2:
+                            Vista.msg(Model.crearTiquet());
+                            cont();
+                            break;
+                        case 3:
+                            Vista.msg(Model.carretCompra());
+                            cont();
+                            break;
+                        case 4:
+                            gestioMagatzemICompres();
+                            break;
+                    }
+                } catch (InputMismatchException e) {
+                    Vista.msg(e.getMessage());
                 }
+
             }
         } catch (InputMismatchException | FileNotFoundException e) {
             Vista.msg(e.getMessage());
@@ -43,17 +50,21 @@ public class Main {
         }
     }
 
-    private static ArrayList<String> obtenirDades(String titol){
+    private static ArrayList<String> obtenirDades(String titol) throws CustomExcepcions.NegatiuException {
         Scanner scan = new Scanner(System.in);
         ArrayList<String> dd = new ArrayList<>();
         Vista.msg(titol);
         Vista.msg("Nom producte:");
         dd.add(scan.nextLine());
         Vista.msg("Preu: ");
-        dd.add(String.valueOf(scan.nextFloat()));
+        float preu = scan.nextFloat();
+        Model.checkNegatiu(preu);
+        dd.add(String.valueOf(preu));
         scan.nextLine(); // Consume el salto de línea pendiente
         Vista.msg("Codi de barres: ");
-        dd.add(String.valueOf(scan.nextInt()));
+        int codi = scan.nextInt();
+        Model.checkNegatiu(codi);
+        dd.add(String.valueOf(codi));
         scan.nextLine(); // Consume el salto de línea pendiente
         return dd;
     }
@@ -64,15 +75,18 @@ public class Main {
         scan.nextLine();
     }
 
-    private static void afegirAlimentacio(){
+    private static void afegirAlimentacio() {
         Scanner scan = new Scanner(System.in);
         try {
             ArrayList<String> a0 = new ArrayList<>();
             a0.addAll(obtenirDades("Afegir alimentació"));
             Vista.msg("Data caducitat (YYYY-MM-DD): ");
             LocalDate d = LocalDate.parse(scan.nextLine());
+            Model.checkDataCaducitat(d);
             Alimentacio aliment = new Alimentacio(a0.get(0), Float.parseFloat(a0.get(1)), Integer.parseInt(a0.get(2)), d);
             Model.afegirAlCarret(aliment);
+        } catch (CustomExcepcions.DataCaducitatException e) {
+            Vista.msg(e.getMessage());
         } catch (Exception e) {
             Vista.msg(e.getMessage());
         }

@@ -1,3 +1,4 @@
+import Excepcions.CustomExcepcions;
 import Productes.*;
 
 import java.io.*;
@@ -9,7 +10,10 @@ public class Model {
     private static Queue<Productes> carret = new ArrayDeque<>();
     private static Queue<String> tiquets = new ArrayDeque<>();
 
-    protected static void afegirAlCarret(Productes p) {
+    protected static void afegirAlCarret(Productes p) throws CustomExcepcions.LimitProductesException {
+        if (carret.size() >= 100) {
+            throw new CustomExcepcions.LimitProductesException("S'ha superat el límit de productes al carret!");
+        }
         carret.add(p);
     }
 
@@ -116,7 +120,7 @@ public class Model {
         return fin;
     }
 
-    public static String mostrarProductesPerCaducitat() {
+    protected static String mostrarProductesPerCaducitat() {
         if (carret.isEmpty()) return "El carret de la compra esta buit!";
         StringBuilder resultado = new StringBuilder();
         DecimalFormat df = new DecimalFormat("#.00");
@@ -139,7 +143,7 @@ public class Model {
         return resultado.toString();
     }
 
-    public static String mostrarTextilsPerComposicio() {
+    protected static String mostrarTextilsPerComposicio() {
         if (carret.isEmpty()) return "El carret de la compra esta buit!";
         StringBuilder resultado = new StringBuilder();
         DecimalFormat df = new DecimalFormat("#.00");
@@ -167,11 +171,23 @@ public class Model {
         return resultado.toString();
     }
 
-    public static String buscarNomProductePerCodi(int codiBarres) {
+    protected static String buscarNomProductePerCodi(int codiBarres) {
         Optional<Productes> producte = carret.stream()
                 .filter(p -> p.getCodibarres() == codiBarres)
                 .findFirst();
         return producte.map(Productes::getNom)
                 .orElse("Producte no trobat");
+    }
+
+    protected static void checkNegatiu(float value) throws CustomExcepcions.NegatiuException {
+        if (value < 0) {
+            throw new CustomExcepcions.NegatiuException("El valor no pot ser negatiu!");
+        }
+    }
+
+    protected static void checkDataCaducitat(LocalDate data) throws CustomExcepcions.DataCaducitatException {
+        if (data.isBefore(LocalDate.now())) {
+            throw new CustomExcepcions.DataCaducitatException("La data de caducitat és anterior a la data actual!");
+        }
     }
 }

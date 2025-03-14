@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import Productes.*;
@@ -34,7 +36,9 @@ public class Main {
                         break;
                 }
             }
-        } catch (InputMismatchException e) {
+        } catch (InputMismatchException | FileNotFoundException e) {
+            Vista.msg(e.getMessage());
+        } catch (IOException e) {
             Vista.msg(e.getMessage());
         }
     }

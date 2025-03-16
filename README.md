@@ -80,4 +80,30 @@ Des del cap de departament de informàtica, el cap de projecte ens demana els se
 
 Sobre les Excepcions:
 
-Coming soon...!!!!
+Excepcions Estàndards:
+
+Feu servir tantes excepcions estàndards de Java com creieu oportú, però cal almenys que treballeu amb aquestes 3 excepcions estàndards:
+
+InputMismatchException
+
+FileNotFoundException
+
+IOException
+
+Excepcions personalitzades:
+
+A banda de les excepcions estàndards, caldrà també que definiu excepcions personalitzades.
+
+Aquestes excepcions s'hauran de definir en un fitxer que contindrà únicament les excepcions definides per vosaltres i que heretaran de Exception
+
+Les excepcions que heu de definir (si no feu aquestes, podeu escollir definir tantes com creieu convenient segons el vostre programa, però almenys heu de definir 5 de diferents):
+
+LimitProductesException: Es llançarà quan es supera un límit de productes.
+
+DataCaducitatException: Es llançarà quan hi ha un problema amb la data de caducitat.
+
+NegatiuException: Es llançarà quan es detecta un valor negatiu.
+
+LimitCaracteresException: Es llançarà quan un text supera el límit de caràcters permès.
+
+EnumFailException: Es llançarà quan hi ha un error relacionat amb un Enum.
